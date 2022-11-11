@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-/bQdsTh/da6pkI1MST/rWKFNjaCP5gBSY4sEBT38Q/9RBh9AH40zEOg7Hlq2THRZ"
+        crossorigin="anonymous"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-8 mt-2">
+                <div class="card shadow-lg rounded">
+                    <div class="card-body">
+                        <h5 class="card-title text-center fw-bold">猜數字遊戲</h5>
+                        <div class="d-flex justify-content-between">
+                            <span>玩家擬猜的數字</span>
+                            <button type="button" class="btn btn-primary restart">重啟遊戲</button>
+                        </div>
+                        <div class="number-btn d-flex justify-content-center mt-2">
+                            <input type="number" class="form-control text-center me-1 input1">
+                            <input type="number" class="form-control text-center me-1 input2">
+                            <input type="number" class="form-control text-center me-1 input3">
+                            <input type="number" class="form-control text-center me-1 input4">
+                            <input type="number" class="form-control text-center me-1 input5">
+                        </div>
+                        <div class="d-flex justify-content-center">
+                            <button type="button" class="btn btn-danger mt-3 check">檢測猜測結果</button>
+                        </div>
+                        <div class="row justify-content-center">
+                            <div class="col-6">
+                                <div class="card shadow-lg rounded result-card mt-3">
+                                    <div class="card-body text-center">
+                                        <span class="player-number text-primary"></span>
+                                        <br>
+                                        <span class="total text-danger fw-bold"></span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-center mt-3">
+                            <button type="button" class="btn btn-info me-1 hidden">顯示莊家的數字</button>
+                            <input class="border-1 rounded text-success result-number" type="text" value="" disabled>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const result = document.querySelector(".result-number");
+        const input1 = document.querySelector(".input1"),
+            input2 = document.querySelector(".input2"),
+            input3 = document.querySelector(".input3"),
+            input4 = document.querySelector(".input4"),
+            input5 = document.querySelector(".input5");
+        const player = document.querySelector(".player-number");
+        const total = document.querySelector(".total");
+
+        const check = document.querySelector(".check");
+        const hidden = document.querySelector(".hidden");
+        const restart = document.querySelector(".restart");
+        let arr = [];
+        let playerArr = [];
+        let str = '';
+        let isClose = false;
+
+        // 隨機產生數字
+        for (i = 0; i < 5; i++) {
+            str = Math.round(Math.random() * 9);
+            for (j = 0; j < arr.length; j++) {
+                if (arr[j] == str) {
+                    arr.splice(j, 1);
+                    i--;
+                }
+            }
+            arr.push(str);
+            arr.sort();
+        }
+
+        // 檢查是否正確
+        player.textContent = "";
+        total.textContent = ""
+
+        check.addEventListener("click", function () {
+            if (arr.includes(Number(input1.value))) {
+                playerArr.push(input1.value)
+            }
+
+            if (arr.includes(Number(input2.value))) {
+                playerArr.push(input2.value)
+            }
+
+            if (arr.includes(Number(input3.value))) {
+                playerArr.push(input3.value)
+            }
+
+            if (arr.includes(Number(input4.value))) {
+                playerArr.push(input4.value)
+            }
+
+            if (arr.includes(Number(input5.value))) {
+                playerArr.push(input5.value)
+            }
+
+            playerArr.sort();
+
+            if(playerArr.length != 0 && playerArr.length != 5){
+                player.textContent = "您猜對的數字有：" + playerArr
+                total.textContent = "總共" + playerArr.length + "個"
+                playerArr = []
+            }else if(playerArr.length = 5){
+                player.textContent = "您猜對的數字有：" + playerArr
+                total.textContent = "全數猜對，請重啟遊戲進行新的一局"
+                playerArr = []
+            }else{
+                total.textContent = "沒猜對半個"
+            }
+        })
+
+        // 顯示/隱藏 莊家數字
+        hidden.addEventListener("click", function () {
+            if (isClose) {
+                result.value = ''
+                hidden.textContent = "顯示莊家的數字"
+                isClose = false
+                return isClose
+            } else {
+                result.value = "莊家的數字：" + arr
+                hidden.textContent = "隱藏莊家的數字"
+                isClose = true
+                return isClose
+            }
+        })
+
+        // 重整遊戲
+        restart.addEventListener("click", function () {
+            location.reload();
+        })
+    </script>
+</body>
+<style>
+    .number {
+        width: 100px !important;
+    }
+
+    .number:hover {
+        background: gray;
+    }
+
+    .number:focus {
+        background: gray;
+    }
+
+    input[type=number]::-webkit-outer-spin-button,
+    input[type=number]::-webkit-inner-spin-button {
+        -webkit-appearance: none;
+        margin: 0;
+    }
+</style>
+
+</html>
